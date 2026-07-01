@@ -24,6 +24,22 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Fixed summary sidebar on large screens */
+        @media (min-width: 1024px) {
+            .checkout-summary-col {
+                position: fixed;
+                right: max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem));
+                top: 7rem;
+                width: 400px;
+                max-height: calc(100vh - 8rem);
+                overflow-y: auto;
+                z-index: 40;
+            }
+            .checkout-form-col {
+                padding-right: 430px;
+            }
+        }
     </style>
 </head>
 
@@ -47,10 +63,10 @@
         </div>
     </header>
 
-    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data" class="flex-grow max-w-7xl mx-auto w-full px-6 py-10 flex flex-col lg:flex-row gap-10 items-start">
+    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data" class="flex-grow max-w-7xl mx-auto w-full px-6 py-10 relative">
         @csrf
    
-        <div class="w-full lg:flex-1 flex flex-col gap-6">
+        <div class="w-full flex flex-col gap-6 checkout-form-col">
 
             <section class="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-5">Contact Information</h2>
@@ -72,25 +88,202 @@
 
             <section class="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-5">Shipping Address</h2>
+
+                {{-- Saved addresses picker --}}
+                @if($savedAddresses->count() > 0)
                 <div class="mb-5">
-                    <label for="street_address" class="block text-[13px] font-semibold text-gray-700 mb-1.5">Street Address</label>
-                    <input type="text" name="street_address" id="street_address" placeholder="123 Health Ave" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                    <label class="block text-[13px] font-semibold text-gray-700 mb-3">Your Saved Addresses</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="address-list">
+                        @foreach($savedAddresses as $addr)
+                        <div class="address-card relative border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:border-[#00a86b]/50 hover:shadow-md group {{ $addr->is_default ? 'border-[#00a86b] bg-[#00a86b]/5 ring-1 ring-[#00a86b]/20' : 'border-gray-200 bg-white' }}"
+                             data-id="{{ $addr->id }}"
+                             data-street="{{ $addr->street_address }}"
+                             data-city="{{ $addr->city }}"
+                             data-state="{{ $addr->state }}"
+                             data-zip="{{ $addr->zip_code }}"
+                             onclick="selectAddress(this)">
+
+                            {{-- Radio indicator --}}
+                            <div class="flex items-start gap-3">
+                                <div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all {{ $addr->is_default ? 'border-[#00a86b] bg-[#00a86b]' : 'border-gray-300 bg-white' }}" id="radio-{{ $addr->id }}">
+                                    <div class="w-2 h-2 rounded-full bg-white {{ $addr->is_default ? '' : 'hidden' }}" id="radio-dot-{{ $addr->id }}"></div>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[13px] font-bold text-gray-900">{{ $addr->label }}</span>
+                                        @if($addr->is_default)
+                                        <span class="text-[10px] font-bold text-[#00a86b] bg-[#00a86b]/10 px-1.5 py-0.5 rounded">DEFAULT</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-[12px] text-gray-600 leading-relaxed truncate">{{ $addr->street_address }}</p>
+                                    <p class="text-[12px] text-gray-500">{{ $addr->city }}, {{ $addr->state }} {{ $addr->zip_code }}</p>
+                                </div>
+                            </div>
+
+                            {{-- Delete button (using JS to avoid nested form) --}}
+                            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                                <button type="button" onclick="deleteAddress({{ $addr->id }}, this)" class="w-7 h-7 rounded-full bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" title="Delete address">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Add New Address card --}}
+                        <div class="address-card border-2 border-dashed border-gray-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:border-[#00a86b]/50 hover:bg-[#00a86b]/5 flex items-center justify-center gap-2 min-h-[100px]"
+                             data-id="new"
+                             onclick="selectNewAddress(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            <span class="text-sm font-semibold text-gray-500">Use New Address</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label for="city" class="block text-[13px] font-semibold text-gray-700 mb-1.5">City</label>
-                        <input type="text" name="city" id="city" placeholder="Metropolis" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                @endif
+
+                {{-- Address form fields --}}
+                <div id="address-fields" class="{{ $savedAddresses->count() > 0 && $savedAddresses->where('is_default', true)->count() > 0 ? '' : '' }}">
+                    <div class="mb-5">
+                        <label for="street_address" class="block text-[13px] font-semibold text-gray-700 mb-1.5">Street Address</label>
+                        <input type="text" name="street_address" id="street_address" placeholder="123 Health Ave" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
                     </div>
-                    <div>
-                        <label for="state" class="block text-[13px] font-semibold text-gray-700 mb-1.5">State/Province</label>
-                        <input type="text" name="state" id="state" placeholder="NY" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label for="city" class="block text-[13px] font-semibold text-gray-700 mb-1.5">City</label>
+                            <input type="text" name="city" id="city" placeholder="Metropolis" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                        </div>
+                        <div>
+                            <label for="state" class="block text-[13px] font-semibold text-gray-700 mb-1.5">State/Province</label>
+                            <input type="text" name="state" id="state" placeholder="NY" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                        </div>
+                        <div>
+                            <label for="zip_code" class="block text-[13px] font-semibold text-gray-700 mb-1.5">Zip Code</label>
+                            <input type="text" name="zip_code" id="zip_code" placeholder="10001" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+                        </div>
                     </div>
-                    <div>
-                        <label for="zip_code" class="block text-[13px] font-semibold text-gray-700 mb-1.5">Zip Code</label>
-                        <input type="text" name="zip_code" id="zip_code" placeholder="10001" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#00a86b] focus:ring-1 focus:ring-[#00a86b] transition-shadow">
+
+                    {{-- Save address checkbox (only for new addresses) --}}
+                    @auth
+                    <div class="mt-5 flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100" id="save-address-row">
+                        <input type="checkbox" name="save_address" id="save_address" value="1" checked class="w-4 h-4 text-[#00a86b] border-gray-300 rounded focus:ring-[#00a86b]">
+                        <label for="save_address" class="text-[13px] text-gray-700 font-medium cursor-pointer">Save this address for future orders</label>
+                        <select name="address_label" id="address_label" class="ml-auto text-[12px] border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:border-[#00a86b]">
+                            <option value="Home"> Home</option>
+                            <option value="Office">Office</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
+                    @endauth
                 </div>
             </section>
+
+            <script>
+                // Auto-fill the default address on page load
+                document.addEventListener('DOMContentLoaded', function() {
+                    const defaultCard = document.querySelector('.address-card[data-id]:not([data-id="new"])');
+                    const hasDefault = document.querySelector('.address-card .bg-\\[\\#00a86b\\]');
+                    if (hasDefault) {
+                        const card = hasDefault.closest('.address-card');
+                        if (card) {
+                            fillAddressFields(card);
+                            hideSaveRow();
+                        }
+                    }
+                });
+
+                function selectAddress(card) {
+                    // Reset all cards
+                    document.querySelectorAll('.address-card').forEach(c => {
+                        c.classList.remove('border-[#00a86b]', 'bg-[#00a86b]/5', 'ring-1', 'ring-[#00a86b]/20');
+                        c.classList.add('border-gray-200', 'bg-white');
+                        const radio = c.querySelector('[id^="radio-"]');
+                        const dot = c.querySelector('[id^="radio-dot-"]');
+                        if (radio) {
+                            radio.classList.remove('border-[#00a86b]', 'bg-[#00a86b]');
+                            radio.classList.add('border-gray-300', 'bg-white');
+                        }
+                        if (dot) dot.classList.add('hidden');
+                    });
+
+                    // Highlight selected card
+                    card.classList.remove('border-gray-200', 'bg-white');
+                    card.classList.add('border-[#00a86b]', 'bg-[#00a86b]/5', 'ring-1', 'ring-[#00a86b]/20');
+                    const radio = card.querySelector('[id^="radio-"]');
+                    const dot = card.querySelector('[id^="radio-dot-"]');
+                    if (radio) {
+                        radio.classList.remove('border-gray-300', 'bg-white');
+                        radio.classList.add('border-[#00a86b]', 'bg-[#00a86b]');
+                    }
+                    if (dot) dot.classList.remove('hidden');
+
+                    // Fill form fields
+                    fillAddressFields(card);
+                    hideSaveRow();
+                }
+
+                function selectNewAddress(card) {
+                    // Reset all cards
+                    document.querySelectorAll('.address-card').forEach(c => {
+                        c.classList.remove('border-[#00a86b]', 'bg-[#00a86b]/5', 'ring-1', 'ring-[#00a86b]/20');
+                        c.classList.add('border-gray-200', 'bg-white');
+                        const radio = c.querySelector('[id^="radio-"]');
+                        const dot = c.querySelector('[id^="radio-dot-"]');
+                        if (radio) {
+                            radio.classList.remove('border-[#00a86b]', 'bg-[#00a86b]');
+                            radio.classList.add('border-gray-300', 'bg-white');
+                        }
+                        if (dot) dot.classList.add('hidden');
+                    });
+
+                    // Highlight new card
+                    card.classList.remove('border-gray-200', 'bg-white');
+                    card.classList.add('border-[#00a86b]', 'bg-[#00a86b]/5');
+
+                    // Clear form fields
+                    document.getElementById('street_address').value = '';
+                    document.getElementById('city').value = '';
+                    document.getElementById('state').value = '';
+                    document.getElementById('zip_code').value = '';
+
+                    // Focus on street address
+                    document.getElementById('street_address').focus();
+                    showSaveRow();
+                }
+
+                function fillAddressFields(card) {
+                    document.getElementById('street_address').value = card.dataset.street || '';
+                    document.getElementById('city').value = card.dataset.city || '';
+                    document.getElementById('state').value = card.dataset.state || '';
+                    document.getElementById('zip_code').value = card.dataset.zip || '';
+                }
+
+                function hideSaveRow() {
+                    const row = document.getElementById('save-address-row');
+                    if (row) row.style.display = 'none';
+                }
+
+                function showSaveRow() {
+                    const row = document.getElementById('save-address-row');
+                    if (row) row.style.display = 'flex';
+                }
+
+                function deleteAddress(id, btn) {
+                    if (!confirm('Delete this address?')) return;
+                    fetch('/checkout/address/' + id, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json',
+                        }
+                    }).then(function() {
+                        const card = btn.closest('.address-card');
+                        if (card) card.remove();
+                    });
+                }
+            </script>
 
             <section class="bg-white border-2 border-yellow-400 rounded-2xl p-7 shadow-sm relative overflow-hidden">
                 <div class="absolute inset-0 bg-yellow-50/30 pointer-events-none"></div>
@@ -106,7 +299,7 @@
                 </div>
 
                 <label for="prescription_file" class="relative z-10 mt-6 border-2 border-dashed border-yellow-300 rounded-xl bg-yellow-50/50 hover:bg-yellow-100/50 transition-colors p-8 flex flex-col items-center justify-center cursor-pointer group block w-full">
-                    <input type="file" name="prescription_file" id="prescription_file" class="hidden" accept=".svg,.png,.jpg,.jpeg,.pdf" required>
+                    <input type="file" name="prescription_file" id="prescription_file" class="hidden" accept=".png,.jpg,.jpeg,.pdf" required>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-yellow-500 mb-3 group-hover:-translate-y-1 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                     </svg>
@@ -149,7 +342,7 @@
 
         </div>
 
-        <div class="w-full lg:w-[400px] shrink-0 sticky top-28 self-start">
+        <div class="w-full lg:w-[400px] shrink-0 checkout-summary-col">
 
             <div class="bg-white border border-gray-200 rounded-[24px] p-7 shadow-sm">
 
@@ -221,7 +414,7 @@
                         Total
                     </span>
                        <input type="hidden" name="total_amount" value="{{ $total }}">
-                    <span class="text-[24px] font-black text-[#00a86b] name="total_amount" id="total_amount">
+                    <span class="text-[24px] font-black text-[#00a86b]" id="total_amount">
                         ₹{{ number_format($total, 2) }}
                     </span>
 

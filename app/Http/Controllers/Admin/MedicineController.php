@@ -61,4 +61,6 @@ class MedicineController extends Controller
         $medicine->delete();
         return redirect()->route('admin.medicines.index')->with('success', 'Medicine deleted successfully.');
     }
+
+   
     }

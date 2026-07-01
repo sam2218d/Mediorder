@@ -11,8 +11,8 @@ class UserOrderController extends Controller
     // Loads the main "My Orders" list page
     public function index()
     {
-        // Grab ONLY the orders belonging to the logged-in user
-        $orders = Order::where('email', Auth::user()->email)
+        // 🛠️ FIX: Grab orders using 'user_id' instead of 'email'
+        $orders = Order::where('user_id', Auth::id())
                        ->with('items') 
                        ->latest()
                        ->get();
@@ -26,8 +26,8 @@ class UserOrderController extends Controller
         // Find the specific order and load its items
         $order = Order::with('items')->findOrFail($id);
         
-        // Security check: Make sure the logged-in user actually owns this order!
-        if ($order->email !== Auth::user()->email) {
+        // 🛠️ FIX: Security check now verifies the user_id matches
+        if ($order->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 

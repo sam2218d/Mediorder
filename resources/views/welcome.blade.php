@@ -34,20 +34,22 @@
         Order prescription and over-the-counter medicines online. Genuine products, fast delivery, and expert care.
       </p>
 
-      <div class="max-w-2xl mx-auto bg-white rounded-full shadow-lg border border-gray-100 flex items-center p-2 mb-8">
+      <form action="{{ route('medicines.search') }}" method="GET" class="max-w-2xl mx-auto bg-white rounded-full shadow-lg border border-gray-100 flex items-center p-2 mb-8">
         <div class="pl-4 text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
         </div>
-        <input type="text" placeholder="Search for medicines..." class="flex-1 w-full bg-transparent border-0 py-3 px-4 text-gray-900 focus:ring-0 placeholder-gray-400 outline-none">
-        <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-colors">
+        
+        <input type="text" name="query" placeholder="Search for medicines..." required class="flex-1 w-full bg-transparent border-0 py-3 px-4 text-gray-900 focus:ring-0 placeholder-gray-400 outline-none">
+        
+        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-colors">
           Shop Now
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
           </svg>
         </button>
-      </div>
+      </form>
 
       <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8 text-sm font-medium text-gray-600">
         <div class="flex items-center gap-2">
@@ -62,7 +64,6 @@
       </div>
     </div>
   </section>
-
 {{-- ===== FEATURED CATEGORIES ===== --}}
 <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex justify-between items-end mb-5">
@@ -127,12 +128,7 @@
         @elseif($loop->index % 4 == 2) bg-teal-50
         @else bg-slate-50 @endif">
 
-        {{-- Rx badge --}}
-        @if($medicine->requires_prescription ?? false)
-          <span class="absolute top-3 left-3 bg-orange-500 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">
-            Rx Required
-          </span>
-        @endif
+        
 
         @if($medicine->image)
           <img src="{{ asset('storage/'.$medicine->image) }}"
@@ -185,6 +181,8 @@
   
   @include('layouts.footer')
    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+@include('components.chatbot')
 
 <script>
 function addToCart(actionUrl) {

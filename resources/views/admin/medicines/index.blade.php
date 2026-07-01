@@ -1,9 +1,9 @@
 @extends('layouts.adminnav')
 
 @section('content')
-<div class="container mx-auto px-6 py-6">
+<div class="container  mx-auto px-6 py-6" >
     <!-- Header -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div class="sm:flex sm:items-center sm:justify-between mb-8  ml-7">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Manage Medicines</h1>
             <p class="mt-2 text-sm text-gray-500">
@@ -35,7 +35,7 @@
     @endif
 
     <!-- Table Card -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm mx-6 overflow-hidden">
 
         <!-- Search -->
         <div class="p-5 border-b border-gray-100 flex justify-between items-center">

@@ -3,20 +3,17 @@
     <div class="flex items-center justify-between h-20">
       
       <a href="/" class="flex items-center gap-3 shrink-0">
-        <div class="bg-emerald-800 text-white rounded-lg w-10 h-10 flex items-center justify-center font-extrabold text-xl">
-          M
-        </div>
-        <span class="text-2xl font-bold text-gray-900 tracking-tight">MediOrder</span>
+         <img src="{{ asset('logo.png') }}" alt="" height="40px"width="149px">
+       
       </a>
 
       <div class="hidden md:flex items-center gap-8">
         <a href="{{ route('medicines.index') }}" class="text-gray-600 font-medium hover:text-emerald-700 transition-colors">Medicines</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-emerald-700 transition-colors">Wellness</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-emerald-700 transition-colors">Lab Tests</a>
+        
         <a href="{{ route('myorders.index') }}" class="text-gray-900 font-semibold hover:text-emerald-700 transition-colors">My Orders</a>
       </div>
 
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-5">
         
         <a href="/cart" class="relative text-gray-800 hover:text-emerald-700 transition-colors" aria-label="Cart">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
@@ -27,7 +24,7 @@
           </span>
         </a>
 
-        <div class="hidden sm:block h-8 w-px bg-gray-200"></div>
+        <div class="hidden sm:block h-8 w-px bg-gray-200 mx-1"></div>
 
         @guest
             <a href="/login" class="hidden sm:flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-sm">
@@ -39,22 +36,43 @@
         @endguest
 
         @auth
-            <div class="hidden sm:flex items-center gap-4">
-                <span class="text-sm font-bold text-gray-700">Hi, {{ Auth::user()->name ?? 'User' }}</span>
-                
-                <form method="POST" action="{{ route('logout') }}" class="m-0">
-                    @csrf
-                    <button type="submit" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-medium transition-all shadow-sm border border-red-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                        </svg>
-                        <span>Logout</span>
-                    </button>
-                </form>
+            <div class="relative group hidden sm:block">
+                <button class="flex items-center gap-2.5 p-1 pr-3 bg-white border border-gray-200 rounded-full hover:shadow-sm hover:border-gray-300 transition-all focus:outline-none">
+                    <img src="{{ Auth::user()->img ? Storage::url(Auth::user()->img) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name ?? 'User') . '&background=00a86b&color=fff&bold=true' }}" alt="Profile" class="w-9 h-9 rounded-full object-cover shadow-sm">
+                    
+                    <div class="flex flex-col text-left">
+                        <span class="text-[13px] font-bold text-gray-900 leading-tight">{{ Auth::user()->name ?? 'User' }}</span>
+                        <span class="text-[11px] font-medium text-gray-500 leading-tight">Member</span>
+                    </div>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-gray-400 ml-1 group-hover:text-gray-600 transition-colors">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <div class="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right translate-y-2 group-hover:translate-y-0 z-50">
+                    <div class="p-2">
+                        <a href="{{ route('myorders.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-emerald-600 rounded-lg transition-colors">
+                            My Orders
+                        </a>
+                        
+                        <div class="h-px bg-gray-100 my-1"></div>
+                        
+                        <form method="POST" action="{{ route('logout') }}" class="m-0">
+                            @csrf
+                            <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         @endauth
         
-        <button class="md:hidden text-gray-800 hover:text-emerald-700">
+        <button class="md:hidden text-gray-800 hover:text-emerald-700 ml-2">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>

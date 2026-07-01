@@ -26,23 +26,18 @@
 
                     <div class="flex flex-col border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 
-                        <div class="relative bg-gray-50 aspect-square flex items-center justify-center p-6">
-                            <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full border border-emerald-300 bg-white text-[13px] font-bold text-emerald-600 shadow-sm">
-                                    In Stock
-                                </span>
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800 text-[13px] font-bold text-white shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-                                    </svg>
-                                    Rx Required
-                                </span>
-                            </div>
+                       <div class="relative h-44 flex items-center justify-center p-5
+                            @if($loop->index % 4 == 0) bg-amber-50
+                            @elseif($loop->index % 4 == 1) bg-blue-50
+                             @elseif($loop->index % 4 == 2) bg-teal-50
+                             @else bg-slate-50 @endif">
+
+                            
                             @if($medicine->image)
                             <img
                                 src="{{ asset('storage/' . $medicine->image) }}"
                                 alt="{{ $medicine->name }}"
-                                class="h-3/4 w-full object-cover rounded-lg border">
+                                class="object-contain w-full h-full group-hover:scale-105 transition-transform duration-300">
                             @endif
 
 
@@ -113,6 +108,13 @@ function addToCart(actionUrl) {
     });
 }
 </script>
+
+@include('layouts.footer')
+
+
+<!-- //chatbot -->
+
+
 </body>
 
 </html>

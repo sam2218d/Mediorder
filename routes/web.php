@@ -12,6 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\ChatbotController;
 
 
 Route::get('/', function () {
@@ -37,6 +38,7 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::delete('/checkout/address/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
 
     Route::resource('cart', CartController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/myorders', [App\Http\Controllers\UserOrderController::class, 'index'])->name('myorders.index');
@@ -53,6 +55,7 @@ Route::get('/products', [MedicineController::class, 'index'])->name('products.in
 
 Route::middleware('admin')->name('admin.')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'getDashboard'])->name('dashboard');
     Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
     Route::resource('categories', AdminCategoryController::class)->except(['create', 'store']);
@@ -72,6 +75,9 @@ Route::post('/checkout/store', [CheckoutController::class, 'store'])->name('chec
 Route::get('/checkout/success/{order}', function ($order) {
     return view('checkout.success', ['orderId' => $order]);
 })->name('checkout.success');
+Route::get('/search', [MedicineController::class, 'search'])->name('medicines.search');
+// AI Chatbot route
+Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
 
 require __DIR__ . '/auth.php';
 

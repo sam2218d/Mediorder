@@ -69,7 +69,7 @@
                             @foreach($orders as $order)
                             <td class="py-4 px-6">
                                 <div class="font-bold text-gray-900 mb-0.5">ORD-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</div>
-                                <div class="text-[12px] font-medium text-gray-500">{{ $order->items_count }} items • ${{ number_format($order->total_amount, 2) }}</div>
+                                <div class="text-[12px] font-medium text-gray-500">{{ $order->items_count }} items • ₹{{ number_format($order->total_amount, 2) }}</div>
                             </td>
                             <td class="py-4 px-6">
                                 <div class="font-semibold text-gray-900">{{ $order->first_name }} {{ $order->last_name }}</div>

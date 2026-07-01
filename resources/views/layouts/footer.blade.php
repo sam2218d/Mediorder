@@ -1,14 +1,12 @@
-<footer class="bg-gray-50 pt-16 pb-8">
+<footer class="border-t border-gray-200 bg-rgb(238 244 240); pt-16 pb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       
       <div class="col-span-1">
         <div class="flex items-center gap-2 mb-4">
-          <div class="bg-emerald-800 text-white rounded-md w-8 h-8 flex items-center justify-center font-bold text-lg">
-            M
-          </div>
-          <span class="text-xl font-bold text-gray-900">MediOrder</span>
+          <img src="{{ asset('logo.png') }}" alt="" height="40px"width="149px">
+          
         </div>
         <p class="text-sm text-gray-500 leading-relaxed max-w-xs">
           Your trusted partner for authentic medicines and healthcare products, delivered right to your door.

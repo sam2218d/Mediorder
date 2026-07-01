@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'img',
     ];
 
     /**
@@ -71,5 +72,13 @@ class User extends Authenticatable
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
+    }
+
+    /**
+     * A user has many saved addresses.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
     }
 }
