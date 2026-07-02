@@ -79,6 +79,8 @@ echo "Running migrations..."\n\
 php artisan migrate --force\n\
 echo "Seeding database..."\n\
 php artisan db:seed --force\n\
+echo "Linking storage..."\n\
+php artisan storage:link --force\n\
 echo "Starting Apache..."\n\
 apache2-foreground' > /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
