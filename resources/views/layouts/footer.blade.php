@@ -1,9 +1,9 @@
-<footer class="border-t border-gray-200 bg-rgb(238 244 240); pt-16 pb-8">
+<footer class="border-t border-gray-200 bg-[rgb(238,244,240)] pt-12 sm:pt-16 pb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
       
-      <div class="col-span-1">
+      <div class="col-span-2 md:col-span-1">
         <div class="flex items-center gap-2 mb-4">
           <img src="{{ asset('logo.png') }}" alt="" height="40px"width="149px">
           

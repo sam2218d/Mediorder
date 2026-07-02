@@ -1,5 +1,11 @@
 <x-guest-layout>
+
     <form method="POST" enctype="multipart/form-data" action="{{ route('register') }}">
+            @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
         @csrf
 
         <!-- Name -->

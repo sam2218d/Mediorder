@@ -12,21 +12,21 @@
 
     @include('layouts.navigation')
 
-    <div class="p-10">
+    <div class="px-4 sm:px-6 lg:px-10 py-6 sm:py-10">
 
-        <div class="flex flex-col md:flex-row gap-8 items-start max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-6 md:gap-8 items-start max-w-7xl mx-auto">
 
             <aside class="w-full md:w-[260px] shrink-0">
                 @include('layouts.sidebar')
             </aside>
 
-            <main class="flex-1">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <main class="flex-1 w-full">
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                     @foreach($medicines as $medicine)
 
                     <div class="flex flex-col border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 
-                       <div class="relative h-44 flex items-center justify-center p-5
+                       <div class="relative h-32 sm:h-44 flex items-center justify-center p-3 sm:p-5
                             @if($loop->index % 4 == 0) bg-amber-50
                             @elseif($loop->index % 4 == 1) bg-blue-50
                              @elseif($loop->index % 4 == 2) bg-teal-50
@@ -44,16 +44,16 @@
                         </div>
 
 
-                        <div class="p-5 flex flex-col flex-grow bg-white">
+                        <div class="p-3 sm:p-5 flex flex-col flex-grow bg-white">
                             @if($medicine->name)
-                            <h3 class="text-lg font-bold text-gray-900 mb-2 leading-tight">{{ $medicine->name }}</h3>
+                            <h3 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2 leading-tight">{{ $medicine->name }}</h3>
                             @endif
-                            <p class="text-xl font-black text-gray-900 mb-5">₹{{ number_format($medicine->price, 2) }}</p>
+                            <p class="text-base sm:text-xl font-black text-gray-900 mb-3 sm:mb-5">₹{{ number_format($medicine->price, 2) }}</p>
 
                             
 
-                               <button type="button" onclick="addToCart('{{ route('cart.add', $medicine->id) }}')" class="mt-auto w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                               <button type="button" onclick="addToCart('{{ route('cart.add', $medicine->id) }}')" class="mt-auto w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2 sm:py-2.5 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 transition-colors text-xs sm:text-sm">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
     </svg>
     Add to Cart

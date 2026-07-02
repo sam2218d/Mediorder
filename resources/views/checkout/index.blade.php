@@ -28,16 +28,13 @@
         /* Fixed summary sidebar on large screens */
         @media (min-width: 1024px) {
             .checkout-summary-col {
-                position: fixed;
-                right: max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem));
-                top: 7rem;
-                width: 400px;
-                max-height: calc(100vh - 8rem);
+                position: sticky;
+                top: 5rem;
+                width: 380px;
+                max-height: calc(100vh - 6rem);
                 overflow-y: auto;
                 z-index: 40;
-            }
-            .checkout-form-col {
-                padding-right: 430px;
+                flex-shrink: 0;
             }
         }
     </style>
@@ -46,27 +43,28 @@
 <body class="bg-[#fafafa] font-sans text-gray-900 min-h-screen flex flex-col">
 
     <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="/cart" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors w-1/3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <a href="/cart" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
-                Back to Cart
+                <span class="hidden sm:inline">Back to Cart</span>
             </a>
 
-            <div class="flex items-center justify-center gap-2 w-1/3">
-                <div class="bg-[#00a86b] text-white p-1 rounded font-bold text-lg w-8 h-8 flex items-center justify-center">M</div>
-                <span class="text-xl font-black tracking-tight text-gray-900">MediOrder Checkout</span>
+            <div class="flex items-center justify-center gap-2">
+                <div class="bg-[#00a86b] text-white p-1 rounded font-bold text-base sm:text-lg w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center">M</div>
+                <span class="text-base sm:text-xl font-black tracking-tight text-gray-900">MediOrder Checkout</span>
             </div>
 
-            <div class="w-1/3"></div>
+            <div class="w-8 sm:w-24"></div>
         </div>
     </header>
 
-    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data" class="flex-grow max-w-7xl mx-auto w-full px-6 py-10 relative">
+    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data" class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-10 relative">
         @csrf
    
-        <div class="w-full flex flex-col gap-6 checkout-form-col">
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div class="w-full lg:flex-1 flex flex-col gap-6">
 
             <section class="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-5">Contact Information</h2>
@@ -167,10 +165,10 @@
 
                     {{-- Save address checkbox (only for new addresses) --}}
                     @auth
-                    <div class="mt-5 flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100" id="save-address-row">
+                    <div class="mt-5 flex flex-wrap items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100" id="save-address-row">
                         <input type="checkbox" name="save_address" id="save_address" value="1" checked class="w-4 h-4 text-[#00a86b] border-gray-300 rounded focus:ring-[#00a86b]">
                         <label for="save_address" class="text-[13px] text-gray-700 font-medium cursor-pointer">Save this address for future orders</label>
-                        <select name="address_label" id="address_label" class="ml-auto text-[12px] border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:border-[#00a86b]">
+                        <select name="address_label" id="address_label" class="sm:ml-auto text-[12px] border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:border-[#00a86b]">
                             <option value="Home"> Home</option>
                             <option value="Office">Office</option>
                             <option value="Other">Other</option>
@@ -342,7 +340,7 @@
 
         </div>
 
-        <div class="w-full lg:w-[400px] shrink-0 checkout-summary-col">
+        <div class="w-full lg:w-auto checkout-summary-col">
 
             <div class="bg-white border border-gray-200 rounded-[24px] p-7 shadow-sm">
 
@@ -445,6 +443,7 @@
 
             </div>
 
+        </div>
         </div>
 
     </form>

@@ -30,8 +30,20 @@ class AdminDashboardController extends Controller
         $latestDate = Order::latest('created_at')->value('created_at');
         $lastupdated = $latestDate ? $latestDate->diffForHumans() : 'No orders yet';
 
-        // 5. Send everything back to the frontend
-        return view('admin.dashboard', compact('totalOrdersToday', 'totalRevenue', 'lowstock', 'recentOrders', 'firstname', 'lastname', 'lastupdated'   ));
+        // 5. Chart data: Revenue for the last 7 days
+        $chartLabels = [];
+        $chartValues = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $chartLabels[] = $date->format('M d');
+            $revenue = Order::where('status', '!=', 'Cancelled')
+                ->whereDate('created_at', $date->toDateString())
+                ->sum('total_amount');
+            $chartValues[] = $revenue;
+        }
+
+        // 6. Send everything back to the frontend
+        return view('admin.dashboard', compact('totalOrdersToday', 'totalRevenue', 'lowstock', 'recentOrders', 'firstname', 'lastname', 'lastupdated', 'chartLabels', 'chartValues'));
     }
 
 

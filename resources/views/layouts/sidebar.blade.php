@@ -1,7 +1,16 @@
-<aside class="w-[260px] flex flex-col gap-8">
-    <h1 class="text-[28px] font-black tracking-tight text-gray-900">All Medicines</h1>
+<aside class="w-full md:w-[260px] flex flex-col gap-6 md:gap-8">
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl md:text-[28px] font-black tracking-tight text-gray-900">All Medicines</h1>
+        {{-- Mobile filter toggle --}}
+        <button id="filter-toggle" onclick="toggleFilters()" class="md:hidden flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-semibold transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+            </svg>
+            Filters
+        </button>
+    </div>
 
-    <form action="{{ route('medicines.index') }}" method="GET">
+    <form action="{{ route('medicines.index') }}" method="GET" id="filter-form" class="hidden md:block">
         
         @foreach(request()->except('categories', 'price') as $key => $value)
             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -65,4 +74,13 @@
             </label>
         </div>
         
-    </form> </aside>
+    </form>
+</aside>
+
+<script>
+function toggleFilters() {
+    const form = document.getElementById('filter-form');
+    form.classList.toggle('hidden');
+    form.classList.toggle('block');
+}
+</script>

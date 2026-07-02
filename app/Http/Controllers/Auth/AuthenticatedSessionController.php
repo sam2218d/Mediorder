@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException; // 1. Import the ValidationException
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,12 +25,21 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // 2. Wrap the authentication attempt in a try-catch block
+        try {
+            $request->authenticate();
+        } catch (ValidationException $e) {
+            // 3. Redirect to the register page if authentication fails
+            return redirect()->route('register')
+                             ->with('error', 'Credentials do not match our records. Please create an account.');
+        }
 
         $request->session()->regenerate();
+        
         if (Auth::user()->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         }
+        
         if (Auth::user()->role === 'user') {
             return redirect('/');
         }

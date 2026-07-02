@@ -1,11 +1,11 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto px-6 py-10 min-h-[60vh]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 min-h-[60vh]">
         
-        <div class="mb-8 flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-gray-900">
+        <div class="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
                 Search Results for "{{ $searchTerm }}"
             </h1>
-            <a href="/" class="text-sm font-semibold text-gray-500 hover:text-[#00a86b] transition-colors">
+            <a href="/" class="text-sm font-semibold text-gray-500 hover:text-[#00a86b] transition-colors shrink-0">
                 &larr; Back to Home
             </a>
         </div>
@@ -19,13 +19,13 @@
                 <p class="text-gray-500 text-sm">We couldn't find anything matching "{{ $searchTerm }}". Check for typos or try a different term.</p>
             </div>
         @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                 @foreach($medicines as $medicine)
             
-                    <div class="border border-gray-200 rounded-2xl p-5 shadow-sm bg-white hover:shadow-md transition-shadow group flex flex-col">
+                    <div class="border border-gray-200 rounded-2xl p-3 sm:p-5 shadow-sm bg-white hover:shadow-md transition-shadow group flex flex-col">
 
                         
-                        <div class="relative h-44 flex items-center justify-center p-5
+                        <div class="relative h-28 sm:h-44 flex items-center justify-center p-3 sm:p-5 rounded-xl
                             @if($loop->index % 4 == 0) bg-amber-50
                             @elseif($loop->index % 4 == 1) bg-blue-50
                              @elseif($loop->index % 4 == 2) bg-teal-50
@@ -42,12 +42,12 @@
                         </div>
 
                         <div class="flex-grow">
-                            <h3 class="font-bold text-gray-900 text-base leading-tight mb-1">{{ $medicine->name }}</h3>
-                            <p class="text-gray-500 text-xs mb-3 line-clamp-2">{{ $medicine->description }}</p>
+                            <h3 class="font-bold text-gray-900 text-sm sm:text-base leading-tight mb-1">{{ $medicine->name }}</h3>
+                            <p class="text-gray-500 text-[11px] sm:text-xs mb-2 sm:mb-3 line-clamp-2">{{ $medicine->description }}</p>
                         </div>
                         
-                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                            <span class="text-lg font-black text-[#00a86b]">₹{{ number_format($medicine->price, 2) }}</span>
+                        <div class="flex items-center justify-between mt-auto pt-3 sm:pt-4 border-t border-gray-100">
+                            <span class="text-base sm:text-lg font-black text-[#00a86b]">₹{{ number_format($medicine->price, 2) }}</span>
                             
                            
                                 @csrf

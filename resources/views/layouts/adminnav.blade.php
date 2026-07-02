@@ -10,7 +10,10 @@
 
 <div class="min-h-screen flex">
 
-    <aside class="hidden lg:flex flex-col w-64 fixed inset-y-0 bg-[#0F172A] z-50">
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-gray-900/50 z-40 hidden lg:hidden transition-opacity opacity-0"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 flex flex-col w-64 bg-[#0F172A] z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
         
         <div class="h-20 flex items-center px-6 shrink-0">
             <img src="{{ asset('logo__2_-removebg-preview.png') }}" alt="" height="40px"width="149px">
@@ -59,7 +62,7 @@
         
         <header class="sticky top-0 z-40 bg-white border-b border-gray-200 h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8">
             
-            <button class="lg:hidden text-gray-500 hover:text-gray-900 mr-4">
+            <button id="mobileMenuBtn" class="lg:hidden text-gray-500 hover:text-gray-900 mr-4">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
             </button>
 
@@ -85,5 +88,46 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+        function toggleSidebar() {
+            // Check if sidebar is open by seeing if it has translate-x-0
+            // On lg screens, it's open by default, but on mobile -translate-x-full applies
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            
+            if (isClosed) {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                
+                backdrop.classList.remove('hidden');
+                // slight delay to allow display block to apply before opacity transition
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                }, 10);
+            } else {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                }, 300); // match duration-300
+            }
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+        }
+        if (backdrop) {
+            backdrop.addEventListener('click', toggleSidebar);
+        }
+    });
+</script>
 </body>
 </html>

@@ -19,7 +19,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Track Order</p>
-                <h1 class="text-3xl font-extrabold text-slate-900 flex items-center gap-3">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
                     Order #ORD-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
                 </h1>
                 <div class="flex items-center gap-2 mt-2 text-[14px] text-slate-600">
@@ -63,8 +63,8 @@
                                 <div class="w-10 h-10 rounded-full bg-[#0d5c46] text-white flex items-center justify-center border-4 border-white mb-3 shadow-sm">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                                 </div>
-                                <p class="text-[13px] font-bold text-slate-900">Order Placed</p>
-                                <p class="text-[11px] font-medium text-slate-500 mt-1">{{ $order->created_at->format('h:i A') }}</p>
+                                <p class="text-[11px] sm:text-[13px] font-bold text-slate-900">Order Placed</p>
+                                <p class="text-[10px] sm:text-[11px] font-medium text-slate-500 mt-1">{{ $order->created_at->format('h:i A') }}</p>
                             </div>
 
                             <div class="flex flex-col items-center">
@@ -75,7 +75,7 @@
                                         <span class="w-2.5 h-2.5 rounded-full {{ $order->status == 'processing' ? 'bg-white' : 'bg-slate-400' }}"></span>
                                     @endif
                                 </div>
-                                <p class="text-[13px] font-bold {{ in_array($order->status, ['processing', 'shipped', 'delivered']) ? 'text-slate-900' : 'text-slate-400' }}">Processed</p>
+                                <p class="text-[11px] sm:text-[13px] font-bold {{ in_array($order->status, ['processing', 'shipped', 'delivered']) ? 'text-slate-900' : 'text-slate-400' }}">Processed</p>
                                 @if(in_array($order->status, ['processing', 'shipped', 'delivered']))
                                     <p class="text-[11px] font-medium text-slate-500 mt-1">Confirmed</p>
                                 @endif
@@ -91,7 +91,7 @@
                                         <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
                                     @endif
                                 </div>
-                                <p class="text-[13px] font-bold {{ in_array($order->status, ['shipped', 'delivered']) ? 'text-slate-900' : 'text-slate-400' }}">In Transit</p>
+                                <p class="text-[11px] sm:text-[13px] font-bold {{ in_array($order->status, ['shipped', 'delivered']) ? 'text-slate-900' : 'text-slate-400' }}">In Transit</p>
                                 @if($order->status == 'shipped')
                                     <p class="text-[11px] font-bold text-blue-600 mt-1">Est. Tomorrow</p>
                                 @endif
@@ -105,7 +105,7 @@
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                                     @endif
                                 </div>
-                                <p class="text-[13px] font-bold {{ $order->status == 'delivered' ? 'text-slate-900' : 'text-slate-400' }}">Delivered</p>
+                                <p class="text-[11px] sm:text-[13px] font-bold {{ $order->status == 'delivered' ? 'text-slate-900' : 'text-slate-400' }}">Delivered</p>
                                 @if($order->status != 'delivered')
                                     <p class="text-[11px] font-medium text-slate-400 mt-1">Pending</p>
                                 @endif
