@@ -15,17 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Only seed if the database is empty (prevents duplicates on redeploys)
+        if (User::count() === 0) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-        // Seed categories first, then medicines (medicines need categories to exist)
-        $this->call([
-            CategorySeeder::class,
-            MedicineSeeder::class,
-        ]);
+        if (\App\Models\Category::count() === 0) {
+            $this->call([
+                CategorySeeder::class,
+                MedicineSeeder::class,
+            ]);
+        }
     }
 }

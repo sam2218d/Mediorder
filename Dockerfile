@@ -69,7 +69,7 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Create an entrypoint script to run migrations and start Apache
+# Create an entrypoint script to run migrations, seed, and start Apache
 RUN echo '#!/bin/bash\n\
 echo "Running optimizations..."\n\
 php artisan config:cache\n\
@@ -77,6 +77,8 @@ php artisan route:cache\n\
 php artisan view:cache\n\
 echo "Running migrations..."\n\
 php artisan migrate --force\n\
+echo "Seeding database..."\n\
+php artisan db:seed --force\n\
 echo "Starting Apache..."\n\
 apache2-foreground' > /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
